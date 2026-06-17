@@ -1,1 +1,1 @@
-const o="/assets/automation-flow-C1tDovzQ.jpg";export{o as a};
+const o="/assets/automation-flow-C1tDovzQ.mp4";export{o as a};
