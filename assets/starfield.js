@@ -6,7 +6,7 @@
     const ctx = canvas.getContext('2d', { alpha: false });
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    const STAR_COUNT = 90 + Math.floor(Math.random() * 31);
+    const STAR_COUNT = 60 + Math.floor(Math.random() * 15);
     const stars = [];
     const pointer = { tx: 0, ty: 0, x: 0, y: 0 };
 
@@ -24,13 +24,13 @@
 
     function pickBrightness() {
       const roll = Math.random();
-      if (roll < 0.15) return 0;
-      if (roll < 0.4) return 1;
+      if (roll < 0.25) return 0;
+      if (roll < 0.6) return 1;
       return 2;
     }
 
     function pickColor() {
-      return Math.random() < 0.68 ? white : purple;
+      return Math.random() < 0.7 ? white : purple;
     }
 
     function createStar(index) {
@@ -42,22 +42,22 @@
 
       const size =
         brightness === 2
-          ? rand(2, 3.5)
+          ? rand(1.8, 3)
           : brightness === 1
-            ? rand(1.5, 2.8)
-            : rand(1, 2.2);
+            ? rand(1.3, 2.4)
+            : rand(0.9, 1.8);
 
       const opacityBands = [
-        { min: 0.35, max: 0.6 },
-        { min: 0.55, max: 0.82 },
-        { min: 0.75, max: 1 },
+        { min: 0.25, max: 0.45 },
+        { min: 0.45, max: 0.68 },
+        { min: 0.65, max: 0.88 },
       ];
       const band = opacityBands[brightness];
-      const baseOpacity = rand(band.min, band.max) * (isPurple ? 0.85 : 1);
+      const baseOpacity = rand(band.min, band.max) * (isPurple ? 0.7 : 0.85);
 
       const direction = layer === 0 ? rand(2.2, 2.8) : rand(0, Math.PI * 2);
       const speedBase =
-        layer === 0 ? rand(0.012, 0.03) : layer === 1 ? rand(0.03, 0.06) : rand(0.045, 0.09);
+        layer === 0 ? rand(0.005, 0.014) : layer === 1 ? rand(0.014, 0.03) : rand(0.02, 0.045);
 
       return {
         x: Math.random() * width,
@@ -75,13 +75,13 @@
         vx: Math.cos(direction) * speedBase,
         vy: Math.sin(direction) * speedBase,
         wanderPhase: Math.random() * Math.PI * 2,
-        wanderRate: rand(0.25, 0.9),
+        wanderRate: rand(0.25, 0.8),
         driftAmp:
-          layer === 0 ? rand(0.008, 0.02) : layer === 1 ? rand(0.018, 0.045) : rand(0.03, 0.06),
-        parallax: layer === 2 ? rand(0.55, 1) : layer === 1 ? rand(0.15, 0.32) : rand(0.05, 0.12),
-        twinkleSpeed: rand(0.85, 1.65),
+          layer === 0 ? rand(0.004, 0.01) : layer === 1 ? rand(0.01, 0.022) : rand(0.018, 0.038),
+        parallax: layer === 2 ? rand(0.4, 0.78) : layer === 1 ? rand(0.12, 0.26) : rand(0.04, 0.09),
+        twinkleSpeed: rand(0.7, 1.35),
         glow:
-          brightness === 2 ? rand(3, 5.5) : brightness === 1 ? rand(2, 3.5) : rand(1.2, 2),
+          brightness === 2 ? rand(2.4, 4.1) : brightness === 1 ? rand(1.6, 2.7) : rand(0.9, 1.6),
         directionTimer: rand(3, 9),
         directionElapsed: 0,
       };
@@ -127,9 +127,9 @@
     }
 
     function maxSpeedForLayer(layer) {
-      if (layer === 0) return 0.04;
-      if (layer === 1) return 0.08;
-      return 0.12;
+      if (layer === 0) return 0.02;
+      if (layer === 1) return 0.04;
+      return 0.07;
     }
 
     function updateStarMotion(star, dt, time, motionScale) {
@@ -170,7 +170,7 @@
       const y = star.y + offsetY;
       const radius = Math.max(0.6, star.size / 2);
       const { r, g, b } = star.color;
-      const colorAlpha = star.isPurple ? 0.65 : 0.85;
+      const colorAlpha = star.isPurple ? 0.5 : 0.65;
       const alpha = opacity * colorAlpha;
 
       const gradient = ctx.createRadialGradient(x, y, 0, x, y, star.glow);
@@ -219,8 +219,8 @@
     function setPointer(clientX, clientY) {
       const nx = clientX / Math.max(1, width) - 0.5;
       const ny = clientY / Math.max(1, height) - 0.5;
-      pointer.tx = Math.max(-18, Math.min(18, nx * 30));
-      pointer.ty = Math.max(-18, Math.min(18, ny * 30));
+      pointer.tx = Math.max(-12, Math.min(12, nx * 20));
+      pointer.ty = Math.max(-12, Math.min(12, ny * 20));
     }
 
     window.addEventListener('resize', () => {
